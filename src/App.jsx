@@ -12,8 +12,7 @@ import CartDashboard from './features/cart/CartDashboard'
 
 import AddNewProduct from './features/admin/AddNewProduct'
 import EditProduct from './features/admin/EditProduct'
-imp
-
+import AdminDashboard from './features/admin/AdminDashboard'
 import AdminRoute from './features/admin/AdminRoute'
 
 import { disableReactDevTools } from '@fvilers/disable-react-devtools'
