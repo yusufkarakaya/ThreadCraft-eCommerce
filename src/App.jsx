@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { store, persistor } from './app/store'
 import { PersistGate } from 'redux-persist/integration/react'
@@ -12,7 +12,7 @@ import CartDashboard from './features/cart/CartDashboard'
 
 import AddNewProduct from './features/admin/AddNewProduct'
 import EditProduct from './features/admin/EditProduct'
-import AdminDashboard from './features/admin/AdminDashboard'
+imp
 
 import AdminRoute from './features/admin/AdminRoute'
 
@@ -26,8 +26,7 @@ function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        {/* Replace BrowserRouter with HashRouter */}
-        <HashRouter>
+        <BrowserRouter>
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<ProductList />} />
@@ -63,7 +62,7 @@ function App() {
               }
             />
           </Routes>
-        </HashRouter>
+        </BrowserRouter>
       </PersistGate>
     </Provider>
   )
