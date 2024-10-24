@@ -131,6 +131,8 @@ const ProductDetails = () => {
                 </Link>
               </button>
             </div>
+          ) : user.role === 'admin' ? (
+            <p>You're Admin!</p>
           ) : (
             <button
               onClick={handleAddToCart}

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { store, persistor } from './app/store'
 import { PersistGate } from 'redux-persist/integration/react'
@@ -26,7 +26,8 @@ function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <BrowserRouter>
+        {/* Replace BrowserRouter with HashRouter */}
+        <HashRouter>
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<ProductList />} />
@@ -62,7 +63,7 @@ function App() {
               }
             />
           </Routes>
-        </BrowserRouter>
+        </HashRouter>
       </PersistGate>
     </Provider>
   )
