@@ -25,7 +25,7 @@ export const store = configureStore({
     getDefaultMiddleware({ serializableCheck: false }).concat(
       apiSlice.middleware
     ),
-  devTools: true,
+  devTools: false,
 })
 
 export const persistor = persistStore(store)

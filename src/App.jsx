@@ -16,6 +16,12 @@ import EditProduct from './features/admin/EditProduct'
 
 import AdminRoute from './features/admin/AdminRoute'
 
+import { disableReactDevTools } from '@fvilers/disable-react-devtools'
+
+if (process.env.NODE_ENV === 'production') {
+  disableReactDevTools()
+}
+
 function App() {
   return (
     <Provider store={store}>
