@@ -5,7 +5,6 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://e-commerce-api-200w.onrender.com',
     prepareHeaders: (headers, { getState }) => {
-      // Get the token from the auth slice in the Redux state
       const token = getState().auth.token
 
       if (token) {
