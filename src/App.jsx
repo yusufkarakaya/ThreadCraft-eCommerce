@@ -10,9 +10,9 @@ import Register from './features/auth/Register'
 import ProductDetails from './features/products/ProductDetails'
 import CartDashboard from './features/cart/CartDashboard'
 
-import AdminDashboard from './features/admin/adminDashboard'
 import AddNewProduct from './features/admin/AddNewProduct'
 import EditProduct from './features/admin/EditProduct'
+import AdminDashboard from './features/admin/AdminDashboard'
 
 import AdminRoute from './features/admin/AdminRoute'
 
