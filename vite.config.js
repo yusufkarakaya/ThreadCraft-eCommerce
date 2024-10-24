@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
+    port: 3000,
     host: true,
   },
   build: {
@@ -11,6 +12,11 @@ export default defineConfig({
       output: {
         manualChunks: undefined,
       },
+    },
+  },
+  resolve: {
+    alias: {
+      '@': '/src',
     },
   },
 })
