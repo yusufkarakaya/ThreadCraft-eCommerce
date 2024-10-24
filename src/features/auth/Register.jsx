@@ -34,21 +34,21 @@ const Register = () => {
         </h1>
         <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
           <input
-            className="p-3 border border-gray-300 focus:border-transparent focus:outline-none focus:ring focus:ring-green-300 rounded-lg transition-all"
+            className="p-3 border border-gray-300 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-600 rounded-lg transition-all"
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Please enter your username"
           />
           <input
-            className="p-3 border border-gray-300 focus:border-transparent focus:outline-none focus:ring focus:ring-green-300 rounded-lg transition-all"
+            className="p-3 border border-gray-300 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-600 rounded-lg transition-all"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Please enter your email"
           />
           <input
-            className="p-3 border border-gray-300 focus:border-transparent focus:outline-none focus:ring focus:ring-green-300 rounded-lg transition-all"
+            className="p-3 border border-gray-300 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-600 rounded-lg transition-all"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
