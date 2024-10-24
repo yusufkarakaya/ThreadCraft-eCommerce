@@ -16,13 +16,17 @@ const CartDashboard = () => {
     isSuccess,
     isError,
     refetch,
-  } = useGetCartQuery(undefined, { pollingInterval: 0 })
+  } = useGetCartQuery()
 
-  // useEffect(() => {
-  //   if (user) {
-  //     refetch()
-  //   }
-  // }, [user, refetch])
+  if (!user) {
+    return (
+      <div className="mt-5">You need to be logged in to view the cart.</div>
+    )
+  }
+
+  useEffect(() => {
+    refetch() // Manually trigger a refetch
+  }, [refetch])
 
   const [removeFromCart] = useRemoveFromCartMutation()
   const [increaseQuantity] = useIncreaseQuantityMutation()
@@ -38,12 +42,6 @@ const CartDashboard = () => {
 
   if (isError) {
     return <div className="mt-5">Fetch Error</div>
-  }
-
-  if (!user) {
-    return (
-      <div className="mt-5">You need to be logged in to view the cart.</div>
-    )
   }
 
   if (!cart || !cart.products || cart.products.length === 0) {
