@@ -4,7 +4,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:3500',
+    baseUrl: 'https://e-commerce-api-200w.onrender.com',
     prepareHeaders: (headers, { getState }) => {
       // Get the token from the auth slice in the Redux state
       const token = getState().auth.token
