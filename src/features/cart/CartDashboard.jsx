@@ -16,17 +16,17 @@ const CartDashboard = () => {
     isSuccess,
     isError,
     refetch,
-  } = useGetCartQuery()
+  } = useGetCartQuery(undefined, { pollingInterval: 0 })
+
+  // useEffect(() => {
+  //   if (user) {
+  //     refetch()
+  //   }
+  // }, [user, refetch])
 
   const [removeFromCart] = useRemoveFromCartMutation()
   const [increaseQuantity] = useIncreaseQuantityMutation()
   const [decreaseQuantity] = useDecreaseQuantityMutation()
-
-  useEffect(() => {
-    if (user) {
-      refetch()
-    }
-  }, [user, refetch])
 
   if (cart && cart.products.length === 0) {
     return <div className="mt-5">Your cart is empty</div>
