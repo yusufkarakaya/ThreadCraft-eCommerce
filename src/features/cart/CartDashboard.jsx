@@ -33,7 +33,7 @@ const CartDashboard = () => {
   }
 
   if (isError) {
-    return <div className="mt-5">Fetch Error</div>
+    return <div className="mt-5">Please Log In and enjoy your shopping!</div>
   }
 
   if (!user) {

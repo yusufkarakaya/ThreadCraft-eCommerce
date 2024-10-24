@@ -1,6 +1,7 @@
 import { Tooltip as ReactTooltip } from 'react-tooltip'
 import { CiLogin } from 'react-icons/ci'
 import { CiLogout } from 'react-icons/ci'
+import { RiAdminLine } from 'react-icons/ri'
 
 import { CiShoppingCart } from 'react-icons/ci'
 import { Link, useNavigate } from 'react-router-dom'
@@ -89,17 +90,30 @@ const Navbar = () => {
             )}
             <ReactTooltip id="logout-tooltip" />
           </span>
-          <span>
-            <Link to="/cart">
-              <CiShoppingCart
-                data-tooltip-id="cart-tooltip"
-                data-tooltip-content="Shopping Cart"
-                className="w-10 h-10 cursor-pointer"
-              />
-            </Link>
-          </span>
 
-          <ReactTooltip id="cart-tooltip" />
+          {user && user.role === 'admin' ? (
+            <span>
+              <Link to="/admin">
+                <RiAdminLine
+                  data-tooltip-id="admin-tooltip"
+                  data-tooltip-content="Admin Dashboard"
+                  className="w-10 h-10 cursor-pointer"
+                />
+              </Link>
+              <ReactTooltip id="admin-tooltip" />
+            </span>
+          ) : (
+            <span>
+              <Link to="/cart">
+                <CiShoppingCart
+                  data-tooltip-id="cart-tooltip"
+                  data-tooltip-content="Shopping Cart"
+                  className="w-10 h-10 cursor-pointer"
+                />
+              </Link>
+              <ReactTooltip id="cart-tooltip" />
+            </span>
+          )}
         </div>
       </nav>
       <section className="text-lg font-semibold text-main-text text-right">
