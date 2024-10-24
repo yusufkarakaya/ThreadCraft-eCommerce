@@ -19,7 +19,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
           stock: product.stock,
           price: product.price,
           description: product.description,
-          imgUrl: product.imageUrl, // Consistency with imageUrl field
+          imgUrl: product.imageUrl,
           category: product.category,
         }))
         return productsAdapter.setAll(initialState, loadedProducts)
@@ -40,7 +40,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
           name: responseData.name,
           stock: responseData.stock,
           price: responseData.price,
-          imgUrl: responseData.imageUrl, // Consistency with imageUrl field
+          imgUrl: responseData.imageUrl,
           category: responseData.category,
           description: responseData.description,
         }

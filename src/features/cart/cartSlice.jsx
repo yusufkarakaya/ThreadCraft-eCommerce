@@ -8,12 +8,17 @@ const initialState = cartAdapter.getInitialState()
 export const cartApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getCart: builder.query({
-      query: () => ({
-        url: '/cart/user',
+      query: (userId) => ({
+        url: `/cart/user/${userId}`,
         method: 'GET',
       }),
-
-      providesTags: ['Cart'],
+      providesTags: (result) =>
+        result?.products
+          ? [
+              ...result.products.map(({ _id }) => ({ type: 'Cart', id: _id })),
+              { type: 'Cart', id: 'LIST' },
+            ]
+          : [{ type: 'Cart', id: 'LIST' }],
     }),
     addToCart: builder.mutation({
       query: (cartItem) => ({

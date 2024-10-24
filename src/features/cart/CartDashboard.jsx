@@ -16,7 +16,7 @@ const CartDashboard = () => {
     isSuccess,
     isError,
     refetch,
-  } = useGetCartQuery()
+  } = useGetCartQuery(user?.id)
 
   const [removeFromCart] = useRemoveFromCartMutation()
   const [increaseQuantity] = useIncreaseQuantityMutation()
@@ -33,9 +33,7 @@ const CartDashboard = () => {
   }
 
   if (isError) {
-    return (
-      <div className="mt-5">You need to be logged in to view the cart.</div>
-    )
+    return <div className="mt-5">Fetch Error</div>
   }
 
   if (!user) {
@@ -45,14 +43,14 @@ const CartDashboard = () => {
   }
 
   if (!cart || !cart.products || cart.products.length === 0) {
-    return <div>Your cart is empty</div>
+    return <div className="mt-4">Your cart is empty.</div>
   }
 
-  const subtotal = cart.products.reduce(
-    (total, productItem) =>
-      total + productItem.product.price * productItem.quantity,
-    0
-  )
+  const subtotal = cart.products.reduce((total, productItem) => {
+    return (
+      total + (productItem?.product?.price || 0) * (productItem?.quantity || 0)
+    )
+  }, 0)
 
   const estimatedShipping = subtotal > 0 ? 0 : 0 // Assuming free shipping for simplicity
   const estimatedTotal = subtotal + estimatedShipping
@@ -97,30 +95,32 @@ const CartDashboard = () => {
           </h2>
           {isSuccess && cart.products.length > 0 ? (
             <ul className="space-y-4">
-              {cart.products.map((productItem) => (
+              {cart.products.map((productItem, index) => (
                 <li
-                  key={productItem.product._id}
+                  key={productItem?.product?._id || index}
                   className="flex items-center border-b pb-4"
                 >
-                  {productItem.product.imageUrl && (
+                  {productItem?.product?.imageUrl && (
                     <img
                       className="w-20 h-20 rounded-md mr-4"
-                      src={`http://localhost:3500/${productItem.product.imageUrl}`}
-                      alt={productItem.product.name}
+                      src={`${productItem?.product?.imageUrl}`}
+                      alt={productItem?.product?.name}
                     />
                   )}
                   <div className="flex-grow">
                     <p className="text-lg font-semibold">
-                      {productItem.product.name}
+                      {productItem?.product?.name}
                     </p>
                     <p className="text-gray-600">
-                      ${productItem.product.price}
+                      ${productItem?.product?.price}
                     </p>
-                    <div className="mt-1">Quantity: {productItem.quantity}</div>
+                    <div className="mt-1">
+                      Quantity: {productItem?.quantity}
+                    </div>
                     <div className="mt-1 flex gap-2">
                       <button
                         onClick={() =>
-                          handleIncreaseQuantity(productItem.product._id)
+                          handleIncreaseQuantity(productItem?.product?._id)
                         }
                         className="py-1 px-5 border bg-transparent border-solid font-semibold rounded-md shadow-sm border-main-text hover:bg-main-text hover:text-white transition-all"
                       >
@@ -128,7 +128,7 @@ const CartDashboard = () => {
                       </button>
                       <button
                         onClick={() =>
-                          handleDecreaseQuantity(productItem.product._id)
+                          handleDecreaseQuantity(productItem?.product?._id)
                         }
                         className="py-1 px-5 border bg-transparent border-solid font-semibold rounded-md shadow-sm border-main-text hover:bg-main-text hover:text-white transition-all"
                       >
@@ -138,7 +138,9 @@ const CartDashboard = () => {
                   </div>
                   <button
                     className="text-red-500 bg-transparent border border-solid border-red-500 hover:bg-red-500 hover:text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                    onClick={() => handleRemoveProduct(productItem.product._id)}
+                    onClick={() =>
+                      handleRemoveProduct(productItem?.product?._id)
+                    }
                   >
                     Remove
                   </button>
