@@ -26,7 +26,6 @@ function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        {/* Replace BrowserRouter with HashRouter */}
         <HashRouter>
           <Routes>
             <Route path="/" element={<Layout />}>

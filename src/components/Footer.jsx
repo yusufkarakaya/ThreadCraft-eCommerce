@@ -4,7 +4,6 @@ const Footer = () => {
   return (
     <footer className="bg-gray-800 text-white py-8 mt-12  ">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
-        {/* Company Info */}
         <div className="mb-6 md:mb-0">
           <h2 className="text-lg font-semibold mb-4">About ThreadCraft</h2>
           <p className="text-sm">

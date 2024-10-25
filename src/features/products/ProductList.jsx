@@ -8,11 +8,10 @@ const ProductList = () => {
   const products = useSelector(selectAllProducts)
   const location = useLocation()
 
-  // Extract the category from the query parameter
   const queryParams = new URLSearchParams(location.search)
   const selectedCategory = queryParams.get('category')
+  console.log(selectedCategory)
 
-  // Filter products based on selected category if any
   const filteredProducts = selectedCategory
     ? products.filter((product) => product.category?.name === selectedCategory)
     : products

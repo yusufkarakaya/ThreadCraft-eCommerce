@@ -25,7 +25,7 @@ const CartDashboard = () => {
   }
 
   useEffect(() => {
-    refetch() // Manually trigger a refetch
+    refetch()
   }, [refetch])
 
   const [removeFromCart] = useRemoveFromCartMutation()
@@ -54,7 +54,7 @@ const CartDashboard = () => {
     )
   }, 0)
 
-  const estimatedShipping = subtotal > 0 ? 0 : 0 // Assuming free shipping for simplicity
+  const estimatedShipping = subtotal > 0 ? 0 : 0
   const estimatedTotal = subtotal + estimatedShipping
 
   const handleRemoveProduct = async (productId) => {
@@ -154,7 +154,6 @@ const CartDashboard = () => {
           )}
         </div>
 
-        {/* Order Summary Section */}
         <div className="md:w-1/3 mt-8 md:mt-0 md:ml-8 bg-gray-100 p-6 rounded-lg shadow-lg">
           <h2 className="text-xl font-bold mb-4">ORDER SUMMARY</h2>
           <div className="flex justify-between mb-2">

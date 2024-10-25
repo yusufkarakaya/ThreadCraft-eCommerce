@@ -11,12 +11,11 @@ const Login = () => {
   const dispatch = useDispatch()
   const [login, { isLoading, isSuccess, isError }] = useLoginMutation()
 
-  // State for storing form data
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const handleLogin = async (e) => {
-    e.preventDefault() // Prevent form refresh on submit
+    e.preventDefault()
 
     // Credentials object
     const credentials = {
@@ -34,7 +33,7 @@ const Login = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate('/') // Replace '/dashboard' with your desired route
+      navigate('/')
     }
   }, [isSuccess, navigate])
 
@@ -49,20 +48,20 @@ const Login = () => {
             className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
             type="email"
             placeholder="Enter your email"
-            value={email} // Controlled input
-            onChange={(e) => setEmail(e.target.value)} // Update state on change
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <input
             className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
             type="password"
             placeholder="Enter your password"
-            value={password} // Controlled input
-            onChange={(e) => setPassword(e.target.value)} // Update state on change
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <button
             type="submit"
             className="bg-green-800 hover:bg-green-700 text-white py-3 rounded-lg font-semibold transition-all duration-300 ease-in-out"
-            disabled={isLoading} // Disable button while loading
+            disabled={isLoading}
           >
             {isLoading ? 'Logging in...' : 'Login'}
           </button>

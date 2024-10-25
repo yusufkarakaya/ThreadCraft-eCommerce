@@ -18,13 +18,12 @@ const AddNewProduct = () => {
 
   useEffect(() => {
     if (products?.entities) {
-      // Extract category names from the entities object and remove duplicates
       const categoriesArray = Object.values(products.entities)
         .map((product) => product.category)
         .filter(
           (category, index, self) =>
             category && index === self.findIndex((c) => c._id === category._id)
-        ) // Remove undefined and duplicates based on `_id`
+        )
 
       setCategories(categoriesArray)
     }
