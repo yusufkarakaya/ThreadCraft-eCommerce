@@ -9,7 +9,7 @@ export const cartApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getCart: builder.query({
       query: () => ({
-        url: `/cart`,
+        url: `/api/cart`,
         method: 'GET',
       }),
       providesTags: (result) =>
@@ -22,7 +22,7 @@ export const cartApiSlice = apiSlice.injectEndpoints({
     }),
     addToCart: builder.mutation({
       query: (cartItem) => ({
-        url: `/cart/add`,
+        url: `/api/cart/add`,
         method: 'POST',
         body: cartItem,
       }),
@@ -30,21 +30,21 @@ export const cartApiSlice = apiSlice.injectEndpoints({
     }),
     removeFromCart: builder.mutation({
       query: (productId) => ({
-        url: `/cart/product/${productId}`,
+        url: `/api/cart/product/${productId}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Cart'],
     }),
     increaseQuantity: builder.mutation({
       query: (productId) => ({
-        url: `/cart/product/${productId}/increase`,
+        url: `/api/cart/product/${productId}/increase`,
         method: 'POST',
       }),
       invalidatesTags: ['Cart'],
     }),
     decreaseQuantity: builder.mutation({
       query: (productId) => ({
-        url: `/cart/product/${productId}/decrease`,
+        url: `/api/cart/product/${productId}/decrease`,
         method: 'POST',
       }),
       invalidatesTags: ['Cart'],

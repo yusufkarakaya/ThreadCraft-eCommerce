@@ -8,7 +8,7 @@ const initialState = productsAdapter.getInitialState()
 export const productsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProducts: builder.query({
-      query: () => '/products',
+      query: () => '/api/products',
       validateStatus: (response, result) =>
         response.status === 200 && !result.isError,
 
@@ -33,7 +33,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
           : [{ type: 'Product', id: 'LIST' }],
     }),
     getProductById: builder.query({
-      query: (id) => `/products/${id}`,
+      query: (id) => `/api/products/${id}`,
       transformResponse: (responseData) => {
         return {
           id: responseData._id,
@@ -49,7 +49,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
     }),
     addNewProduct: builder.mutation({
       query: (newProduct) => ({
-        url: '/products',
+        url: '/api/products',
         method: 'POST',
         body: newProduct,
       }),
@@ -57,7 +57,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
     }),
     updateProduct: builder.mutation({
       query: ({ id, data }) => ({
-        url: `/products/${id}`,
+        url: `/api/products/${id}`,
         method: 'PATCH',
         body: data,
       }),
@@ -68,7 +68,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
     }),
     deleteProduct: builder.mutation({
       query: (id) => ({
-        url: `/products/${id}`,
+        url: `/api/products/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: (result, error, id) => [

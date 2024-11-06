@@ -3,17 +3,11 @@ import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { selectProductById, useGetProductByIdQuery } from './productsSlide'
 import { useAddToCartMutation } from '../cart/cartSlice'
-import { selectUser } from '../auth/authSlice'
-import { Link } from 'react-router-dom'
 
 const ProductDetails = () => {
   const { productId } = useParams()
 
   const product = useSelector((state) => selectProductById(state, productId))
-
-  const user = useSelector(selectUser)
-
-  console.log('User:', user || 'No user logged in')
 
   const [quantity, setQuantity] = useState(1)
   const [addToCart, { isLoading: isAddingToCart }] = useAddToCartMutation()
@@ -31,8 +25,6 @@ const ProductDetails = () => {
 
     try {
       await addToCart(payload).unwrap()
-
-      console.log('Product added to cart successfully')
     } catch (error) {
       console.error('Failed to add product to cart:', error)
     }
@@ -117,33 +109,15 @@ const ProductDetails = () => {
             />
           </div>
 
-          {!user ? (
-            <div>
-              <p className="text-red-600 text-sm mb-4">
-                You need to login to add products to cart
-              </p>
-              <button>
-                <Link
-                  to="/auth/login"
-                  className="text-white bg-green-800 py-2 px-6 rounded-lg hover:bg-green-700 transition-all duration-300 ease-in-out"
-                >
-                  Login
-                </Link>
-              </button>
-            </div>
-          ) : user.role === 'admin' ? (
-            <p>You're Admin!</p>
-          ) : (
-            <button
-              onClick={handleAddToCart}
-              disabled={isAddingToCart || productToDisplay.stock === 0}
-              className={`bg-green-700 hover:bg-green-600 text-white py-3 px-6 rounded-lg mt-4 transition-all duration-300 ease-in-out ${
-                isAddingToCart ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
-            >
-              {isAddingToCart ? 'Adding...' : 'Add to Cart'}
-            </button>
-          )}
+          <button
+            onClick={handleAddToCart}
+            disabled={isAddingToCart || productToDisplay.stock === 0}
+            className={`bg-green-700 hover:bg-green-600 text-white py-3 px-6 rounded-lg mt-4 transition-all duration-300 ease-in-out ${
+              isAddingToCart ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+          >
+            {isAddingToCart ? 'Adding...' : 'Add to Cart'}
+          </button>
         </div>
       </div>
     </div>

@@ -7,8 +7,13 @@ import {
 import { useSelector } from 'react-redux'
 import { selectUser } from '../auth/authSlice'
 import { useEffect } from 'react'
+import { loadStripe } from '@stripe/stripe-js'
+
+// Stripe promise'ı component dışında oluştur
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY)
 
 const CartDashboard = () => {
+  // Hook'ları en üstte ve koşulsuz şekilde tanımlayın
   const user = useSelector(selectUser)
   const {
     data: cart,
@@ -18,28 +23,33 @@ const CartDashboard = () => {
     refetch,
   } = useGetCartQuery()
 
+  const [removeFromCart] = useRemoveFromCartMutation()
+  const [increaseQuantity] = useIncreaseQuantityMutation()
+  const [decreaseQuantity] = useDecreaseQuantityMutation()
+
+  // Kullanıcının oturum açmamış olması durumunda
   if (!user) {
     return (
       <div className="mt-5">You need to be logged in to view the cart.</div>
     )
   }
 
+  // Cart değiştikçe yeniden veri getirme
   useEffect(() => {
     refetch()
   }, [refetch])
 
-  const [removeFromCart] = useRemoveFromCartMutation()
-  const [increaseQuantity] = useIncreaseQuantityMutation()
-  const [decreaseQuantity] = useDecreaseQuantityMutation()
-
+  // Sepet boşsa bilgilendirme
   if (cart && cart.products.length === 0) {
     return <div className="mt-5">Your cart is empty</div>
   }
 
+  // Veri yüklenirken bekleme mesajı
   if (isLoading) {
     return <div>Loading...</div>
   }
 
+  // Hata durumunda hata mesajı
   if (isError) {
     return <div className="mt-5">Fetch Error</div>
   }
@@ -60,7 +70,6 @@ const CartDashboard = () => {
   const handleRemoveProduct = async (productId) => {
     try {
       await removeFromCart(productId).unwrap()
-      console.log('Product removed from cart successfully')
     } catch (error) {
       console.error('Failed to remove product:', error)
     }
@@ -69,7 +78,6 @@ const CartDashboard = () => {
   const handleIncreaseQuantity = async (productId) => {
     try {
       await increaseQuantity(productId).unwrap()
-      console.log('Product quantity increased successfully')
     } catch (error) {
       console.error('Failed to increase product quantity:', error)
     }
@@ -78,9 +86,59 @@ const CartDashboard = () => {
   const handleDecreaseQuantity = async (productId) => {
     try {
       await decreaseQuantity(productId).unwrap()
-      console.log('Product quantity decreased successfully')
     } catch (error) {
       console.error('Failed to decrease product quantity:', error)
+    }
+  }
+
+  const handleCheckout = async () => {
+    try {
+      const stripe = await stripePromise
+      if (!stripe) {
+        throw new Error('Stripe failed to load')
+      }
+
+      // Format the line items correctly
+      const lineItems = cart.products.map((productItem) => ({
+        name: productItem.product.name,
+        price: productItem.product.price,
+        quantity: productItem.quantity,
+        image: productItem.product.imageUrl,
+      }))
+
+      const response = await fetch('/api/checkout/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // Include cookies if you're using session-based auth
+        body: JSON.stringify({ items: lineItems }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.text() // Use text() instead of json() first
+        console.error('Response status:', response.status)
+        console.error('Response text:', errorData)
+
+        try {
+          const jsonError = JSON.parse(errorData)
+          throw new Error(
+            jsonError.error || 'Failed to create checkout session'
+          )
+        } catch (e) {
+          throw new Error('Failed to create checkout session')
+        }
+      }
+
+      const session = await response.json()
+      if (session.url) {
+        window.location.href = session.url
+      } else {
+        throw new Error('No checkout URL received')
+      }
+    } catch (error) {
+      console.error('Checkout error:', error)
+      alert('Failed to initiate checkout. Please try again.')
     }
   }
 
@@ -169,7 +227,11 @@ const CartDashboard = () => {
             <span>Estimated Total</span>
             <span>${estimatedTotal.toFixed(2)}</span>
           </div>
-          <button className="bg-black text-white w-full py-3 mt-6 rounded-lg hover:bg-gray-800 transition-all">
+
+          <button
+            onClick={handleCheckout}
+            className="bg-black text-white w-full py-3 mt-6 rounded-lg hover:bg-gray-800 transition-all"
+          >
             CHECKOUT NOW
           </button>
         </div>

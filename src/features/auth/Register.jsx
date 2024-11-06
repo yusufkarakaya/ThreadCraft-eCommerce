@@ -9,12 +9,21 @@ const Register = () => {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [passwordValidate, setPasswordValidate] = useState('')
+  const [formError, setFormError] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    if (password !== passwordValidate) {
+      setFormError('Passwords do not match.')
+    }
+
     try {
-      await register({ username, email, password }).unwrap()
+      if (password === passwordValidate) {
+        await register({ username, email, password }).unwrap()
+        console.log('passwords are matched.')
+      }
     } catch (error) {
       console.error('Registration failed:', error)
     }
@@ -54,10 +63,20 @@ const Register = () => {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Please enter your password"
           />
+          <input
+            className="p-3 border border-gray-300 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-600 rounded-lg transition-all"
+            type="password"
+            value={passwordValidate}
+            onChange={(e) => setPasswordValidate(e.target.value)}
+            placeholder="Please enter your password again"
+          />
           <button className="bg-green-800 hover:bg-green-700 text-white py-3 rounded-lg font-semibold transition-all duration-300 ease-in-out">
             Register
           </button>
         </form>
+        {formError && (
+          <div className="text-red-500 text-center mt-4">{formError}</div>
+        )}
         {isError && (
           <div className="text-red-500 text-center mt-4">
             Registration failed. Please try again.

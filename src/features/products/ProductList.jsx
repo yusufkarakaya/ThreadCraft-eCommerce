@@ -10,7 +10,6 @@ const ProductList = () => {
 
   const queryParams = new URLSearchParams(location.search)
   const selectedCategory = queryParams.get('category')
-  console.log(selectedCategory)
 
   const filteredProducts = selectedCategory
     ? products.filter((product) => product.category?.name === selectedCategory)

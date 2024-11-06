@@ -17,7 +17,6 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault()
 
-    // Credentials object
     const credentials = {
       email,
       password,
@@ -25,7 +24,7 @@ const Login = () => {
 
     try {
       const userData = await login(credentials).unwrap()
-      dispatch(setCredentials(userData)) // Store token and user data in Redux
+      dispatch(setCredentials(userData))
     } catch (error) {
       console.error('Failed to login: ', error)
     }
