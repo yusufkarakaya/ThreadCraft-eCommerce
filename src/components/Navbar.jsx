@@ -1,22 +1,33 @@
+import { useEffect, useState } from 'react'
 import { Tooltip as ReactTooltip } from 'react-tooltip'
-import { CiLogin } from 'react-icons/ci'
-import { CiLogout } from 'react-icons/ci'
+import { CiLogin, CiLogout, CiShoppingCart } from 'react-icons/ci'
 import { RiAdminLine } from 'react-icons/ri'
-
-import { CiShoppingCart } from 'react-icons/ci'
 import { Link, useNavigate } from 'react-router-dom'
 import { selectUser } from '../features/auth/authSlice'
-import { useSelector } from 'react-redux'
-
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { logOut } from '../features/auth/authSlice'
 import { persistor } from '../app/store'
+import { useGetCartQuery } from '../features/cart/cartSlice'
 
 const Navbar = () => {
   const dispatch = useDispatch()
-
   const navigate = useNavigate()
+
   const user = useSelector(selectUser)
+  const { data: cart, isSuccess } = useGetCartQuery()
+
+  const [quantity, setQuantity] = useState(0)
+
+  useEffect(() => {
+    if (cart && cart.products && cart.products.length >= 0) {
+      const totalQuantity = cart.products.reduce(
+        (acc, item) => acc + item.quantity,
+        0
+      )
+      setQuantity(totalQuantity)
+    }
+  }, [cart])
+
   const handleCategoryClick = (category) => {
     navigate(`/?category=${category}`)
   }
@@ -104,12 +115,17 @@ const Navbar = () => {
             </span>
           ) : (
             <span>
-              <Link to="/cart">
+              <Link to="/cart" className="relative">
                 <CiShoppingCart
                   data-tooltip-id="cart-tooltip"
                   data-tooltip-content="Shopping Cart"
-                  className="w-10 h-10 cursor-pointer"
+                  className="w-10 h-10 cursor-pointer outline-none"
                 />
+                {user && quantity > 0 && (
+                  <span className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 bg-red-500 text-white rounded-full px-2 py-1 text-xs font-bold flex items-center justify-center">
+                    {quantity}
+                  </span>
+                )}
               </Link>
               <ReactTooltip id="cart-tooltip" />
             </span>
