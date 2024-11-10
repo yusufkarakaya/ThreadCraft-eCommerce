@@ -4,8 +4,9 @@ import {
   useIncreaseQuantityMutation,
   useDecreaseQuantityMutation,
 } from './cartSlice'
+import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { selectUser } from '../auth/authSlice'
+import { selectUser, selectIsVerified } from '../auth/authSlice'
 import { useEffect } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 
@@ -13,7 +14,8 @@ import { loadStripe } from '@stripe/stripe-js'
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY)
 
 const CartDashboard = () => {
-  // Hook'ları en üstte ve koşulsuz şekilde tanımlayın
+  const isVerified = useSelector(selectIsVerified)
+
   const user = useSelector(selectUser)
   const {
     data: cart,
@@ -227,13 +229,20 @@ const CartDashboard = () => {
             <span>Estimated Total</span>
             <span>${estimatedTotal.toFixed(2)}</span>
           </div>
-
-          <button
-            onClick={handleCheckout}
-            className="bg-black text-white w-full py-3 mt-6 rounded-lg hover:bg-gray-800 transition-all"
-          >
-            CHECKOUT NOW
-          </button>
+          {isVerified ? (
+            <button
+              onClick={handleCheckout}
+              className="bg-black text-white w-full py-3 mt-6 rounded-lg hover:bg-gray-800 transition-all"
+            >
+              CHECKOUT NOW
+            </button>
+          ) : (
+            <Link to="/auth/verification">
+              <button className="bg-red-900 text-white w-full py-3 mt-6 rounded-lg hover:bg-gray-800 transition-all">
+                Please verify your Email
+              </button>
+            </Link>
+          )}
         </div>
       </div>
     </div>

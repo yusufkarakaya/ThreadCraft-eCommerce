@@ -18,6 +18,7 @@ import AdminRoute from './features/admin/AdminRoute'
 
 import Success from './components/Success'
 import Cancel from './components/Cancel'
+import VerificationForm from './components/VerificationForm'
 
 import { disableReactDevTools } from '@fvilers/disable-react-devtools'
 
@@ -41,6 +42,7 @@ function App() {
 
             <Route path="/auth/login" element={<Login />} />
             <Route path="/auth/register" element={<Register />} />
+            <Route path="/auth/verification" element={<VerificationForm />} />
 
             <Route
               path="/admin"

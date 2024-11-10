@@ -1,11 +1,17 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { selectProductById, useGetProductByIdQuery } from './productsSlide'
 import { useAddToCartMutation } from '../cart/cartSlice'
+import { selectUser } from '../auth/authSlice'
 
 const ProductDetails = () => {
   const { productId } = useParams()
+
+  const user = useSelector(selectUser)
+  useEffect(() => {
+    console.log(user)
+  }, [user])
 
   const product = useSelector((state) => selectProductById(state, productId))
 
@@ -109,15 +115,21 @@ const ProductDetails = () => {
             />
           </div>
 
-          <button
-            onClick={handleAddToCart}
-            disabled={isAddingToCart || productToDisplay.stock === 0}
-            className={`bg-green-700 hover:bg-green-600 text-white py-3 px-6 rounded-lg mt-4 transition-all duration-300 ease-in-out ${
-              isAddingToCart ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-          >
-            {isAddingToCart ? 'Adding...' : 'Add to Cart'}
-          </button>
+          {user ? (
+            <button
+              onClick={handleAddToCart}
+              disabled={isAddingToCart || productToDisplay.stock === 0}
+              className={`bg-green-700 hover:bg-green-600 text-white py-3 px-6 rounded-lg mt-4 transition-all duration-300 ease-in-out ${
+                isAddingToCart ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+            >
+              {isAddingToCart ? 'Adding...' : 'Add to Cart'}
+            </button>
+          ) : (
+            <p className="text-center text-red-500 mt-4">
+              Please login to add this item to your cart
+            </p>
+          )}
         </div>
       </div>
     </div>
