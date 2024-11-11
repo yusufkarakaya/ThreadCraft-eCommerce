@@ -45,32 +45,35 @@ const Navbar = () => {
   return (
     <header className="pt-12 pb-8">
       <nav className="flex justify-between items-center">
-        <div className="text-5xl font-bold flex flex-col text-gray-700">
+        <div className="text-3xl font-bold flex flex-col text-gray-700">
           <Link to="/">ThreadCraft</Link>
           <span className="text-sm font-semibold text-gray-500 mx-auto">
             Crafted for Comfort, Designed for Style
           </span>
         </div>
 
-        <ul className="flex space-x-6">
+        <ul className="flex space-x-3">
           <li
             className="text-lg text-main-text cursor-pointer transition-all hover:text-gray-800 hover:underline hover:underline-offset-2"
             onClick={() => shopAll()}
           >
             Shop All
           </li>
+          <span className="text-main-text text-xl">|</span>
           <li
             className="text-lg text-main-text cursor-pointer transition-all hover:text-gray-800 hover:underline hover:underline-offset-2"
             onClick={() => handleCategoryClick('Basic Collection')}
           >
             Basic Collection
           </li>
+          <span className="text-main-text text-xl">|</span>
           <li
             className="text-lg text-main-text cursor-pointer transition-all hover:text-gray-800 hover:underline hover:underline-offset-2"
             onClick={() => handleCategoryClick('Graphic Series')}
           >
             Graphic Series
           </li>
+          <span className="text-main-text text-xl">|</span>
           <li
             className="text-lg text-main-text cursor-pointer transition-all hover:text-gray-800 hover:underline hover:underline-offset-2"
             onClick={() => handleCategoryClick('Eco-Friendly Line')}
@@ -132,7 +135,7 @@ const Navbar = () => {
           )}
         </div>
       </nav>
-      <section className="text-lg font-semibold text-main-text text-right">
+      <section className="text-sm font-semibold text-main-text text-right">
         {user ? `Welcome, ${user.username}` : 'Welcome, Guest'}
       </section>
     </header>
