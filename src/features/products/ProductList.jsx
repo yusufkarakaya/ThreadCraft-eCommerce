@@ -2,9 +2,11 @@ import { useGetProductsQuery } from './productsSlide'
 import { useSelector } from 'react-redux'
 import { selectAllProducts } from './productsSlide'
 import { Link, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
 
 const ProductList = () => {
-  const { isLoading, isSuccess, isError, error } = useGetProductsQuery()
+  const { isLoading, isSuccess, isError, error, refetch } =
+    useGetProductsQuery()
   const products = useSelector(selectAllProducts)
   const location = useLocation()
 
@@ -23,6 +25,11 @@ const ProductList = () => {
     return <div>Error: {error.message}</div>
   }
 
+  useEffect(() => {
+    refetch()
+    console.log(products)
+  }, [products])
+
   if (isSuccess) {
     return (
       <section className="w-full pt-8 pb-8">
@@ -34,7 +41,7 @@ const ProductList = () => {
             <div key={product.id} className="bg-white p-4 border rounded-lg">
               <Link to={`/product/${product.id}`}>
                 <img
-                  src={`${product.imgUrl}`}
+                  src={`${product.images[0]}`}
                   alt={product.name}
                   className="w-full h-auto object-cover cursor-pointer"
                 />

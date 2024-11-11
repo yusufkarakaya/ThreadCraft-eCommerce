@@ -19,7 +19,8 @@ export const productsApiSlice = apiSlice.injectEndpoints({
           stock: product.stock,
           price: product.price,
           description: product.description,
-          imgUrl: product.imageUrl,
+          // imgUrl: product.imageUrl,
+          images: product.images,
           category: product.category,
         }))
         return productsAdapter.setAll(initialState, loadedProducts)

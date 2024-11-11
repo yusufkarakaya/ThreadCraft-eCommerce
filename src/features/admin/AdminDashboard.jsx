@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { FaHome } from 'react-icons/fa'
 import { useSelector } from 'react-redux'
@@ -33,6 +33,10 @@ const AdminDashboard = () => {
     return <div>Error: {error.message}</div>
   }
 
+  useEffect(() => {
+    console.log(products)
+  }, [products])
+
   let content = (
     <section className="p-10">
       <div className="flex mt-10 mb-6 gap-3">
@@ -54,7 +58,7 @@ const AdminDashboard = () => {
         {products.map((product) => (
           <div key={product.id} className="bg-white p-4 border rounded-lg">
             <img
-              src={`${product.imgUrl}`}
+              src={`${product.images[0]}`}
               alt={product.name}
               className="w-full h-auto object-cover"
             />

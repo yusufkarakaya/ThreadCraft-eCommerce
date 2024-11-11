@@ -9,9 +9,6 @@ const ProductDetails = () => {
   const { productId } = useParams()
 
   const user = useSelector(selectUser)
-  useEffect(() => {
-    console.log(user)
-  }, [user])
 
   const product = useSelector((state) => selectProductById(state, productId))
 

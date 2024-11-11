@@ -24,7 +24,7 @@ const AddNewProduct = () => {
           (category, index, self) =>
             category && index === self.findIndex((c) => c._id === category._id)
         )
-
+      console.log(products)
       setCategories(categoriesArray)
     }
   }, [products])
@@ -32,7 +32,7 @@ const AddNewProduct = () => {
   const [newProduct, setNewProduct] = useState({
     name: '',
     price: '',
-    image: null,
+    images: [],
     category: '',
     stock: '',
     description: '',
@@ -47,9 +47,10 @@ const AddNewProduct = () => {
   }
 
   const handleImageChange = (e) => {
+    const files = Array.from(e.target.files)
     setNewProduct((prev) => ({
       ...prev,
-      image: e.target.files[0],
+      images: files,
     }))
   }
 
@@ -62,16 +63,16 @@ const AddNewProduct = () => {
     formData.append('category', newProduct.category)
     formData.append('stock', Number(newProduct.stock))
     formData.append('description', newProduct.description)
-    if (newProduct.image) {
-      formData.append('imageUrl', newProduct.image)
-    }
+    newProduct.images.forEach((image) => {
+      formData.append('images', image)
+    })
 
     try {
       await addNewProduct(formData).unwrap()
       setNewProduct({
         name: '',
         price: '',
-        image: '',
+        images: [],
         category: '',
         stock: '',
         description: '',
@@ -91,7 +92,7 @@ const AddNewProduct = () => {
 
   return (
     <div className="max-w-lg mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
-      <h1 className="text-2xl font-bold mb-6 text-center text-gray-700">
+      <h1 className="text-xl font-bold mb-6 text-center text-gray-700">
         Add New Product
       </h1>
 
@@ -106,7 +107,7 @@ const AddNewProduct = () => {
         <div className="mb-4">
           <label
             htmlFor="name"
-            className="block text-gray-700 font-semibold mb-2"
+            className="block text-gray-700 font-semibold mb-1"
           >
             Product Name
           </label>
@@ -123,7 +124,7 @@ const AddNewProduct = () => {
         <div className="mb-4">
           <label
             htmlFor="price"
-            className="block text-gray-700 font-semibold mb-2"
+            className="block text-gray-700 font-semibold mb-1"
           >
             Product Price
           </label>
@@ -140,12 +141,13 @@ const AddNewProduct = () => {
         <div className="mb-4">
           <label
             htmlFor="imageUrl"
-            className="block text-gray-700 font-semibold mb-2"
+            className="block text-gray-700 font-semibold mb-1"
           >
             Product Image
           </label>
           <input
             type="file"
+            multiple
             name="imageUrl"
             id="imageUrl"
             onChange={handleImageChange}
@@ -156,7 +158,7 @@ const AddNewProduct = () => {
         <div className="mb-4">
           <label
             htmlFor="category"
-            className="block text-gray-700 font-semibold mb-2"
+            className="block text-gray-700 font-semibold mb-1"
           >
             Product Category
           </label>
@@ -179,7 +181,7 @@ const AddNewProduct = () => {
         <div className="mb-4">
           <label
             htmlFor="stock"
-            className="block text-gray-700 font-semibold mb-2"
+            className="block text-gray-700 font-semibold mb-1"
           >
             Product Stock
           </label>
@@ -196,7 +198,7 @@ const AddNewProduct = () => {
         <div className="mb-6">
           <label
             htmlFor="description"
-            className="block text-gray-700 font-semibold mb-2"
+            className="block text-gray-700 font-semibold mb-1"
           >
             Product Description
           </label>
