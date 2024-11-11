@@ -5,8 +5,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 
 const ProductList = () => {
-  const { isLoading, isSuccess, isError, error, refetch } =
-    useGetProductsQuery()
+  const { isLoading, isSuccess, isError, error } = useGetProductsQuery()
   const products = useSelector(selectAllProducts)
   const location = useLocation()
 
@@ -24,11 +23,6 @@ const ProductList = () => {
   if (isError) {
     return <div>Error: {error.message}</div>
   }
-
-  useEffect(() => {
-    refetch()
-    console.log(products)
-  }, [products])
 
   if (isSuccess) {
     return (
@@ -53,7 +47,7 @@ const ProductList = () => {
               </Link>
               <p className="text-main-text">${product.price} USD</p>
               <Link to={`/product/${product.id}`}>
-                <button className="mt-4 bg-green-800 text-white py-2 w-full rounded-lg hover:bg-green-700 transition-all">
+                <button className="mt-4 bg-green-900 text-white py-2 w-full rounded-lg hover:bg-green-800 transition-all duration-200">
                   Product Details
                 </button>
               </Link>

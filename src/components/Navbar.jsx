@@ -54,28 +54,28 @@ const Navbar = () => {
 
         <ul className="flex space-x-3">
           <li
-            className="text-lg text-main-text cursor-pointer transition-all hover:text-gray-800 hover:underline hover:underline-offset-2"
+            className="text-base text-green-900 cursor-pointer  hover:text-gray-800 hover:underline hover:underline-offset-2"
             onClick={() => shopAll()}
           >
             Shop All
           </li>
-          <span className="text-main-text text-xl">|</span>
+          <span>|</span>
           <li
-            className="text-lg text-main-text cursor-pointer transition-all hover:text-gray-800 hover:underline hover:underline-offset-2"
+            className="text-base text-green-900 cursor-pointer transition-all hover:text-gray-800 hover:underline hover:underline-offset-2"
             onClick={() => handleCategoryClick('Basic Collection')}
           >
             Basic Collection
           </li>
-          <span className="text-main-text text-xl">|</span>
+          <span>|</span>
           <li
-            className="text-lg text-main-text cursor-pointer transition-all hover:text-gray-800 hover:underline hover:underline-offset-2"
+            className="text-base text-green-900 cursor-pointer transition-all hover:text-gray-800 hover:underline hover:underline-offset-2"
             onClick={() => handleCategoryClick('Graphic Series')}
           >
             Graphic Series
           </li>
-          <span className="text-main-text text-xl">|</span>
+          <span>|</span>
           <li
-            className="text-lg text-main-text cursor-pointer transition-all hover:text-gray-800 hover:underline hover:underline-offset-2"
+            className="text-base text-green-900 cursor-pointer transition-all hover:text-gray-800 hover:underline hover:underline-offset-2"
             onClick={() => handleCategoryClick('Eco-Friendly Line')}
           >
             Eco-Friendly Line

@@ -116,7 +116,7 @@ const ProductDetails = () => {
             <button
               onClick={handleAddToCart}
               disabled={isAddingToCart || productToDisplay.stock === 0}
-              className={`bg-green-700 hover:bg-green-600 text-white py-3 px-6 rounded-lg mt-4 transition-all duration-300 ease-in-out ${
+              className={`bg-green-900 hover:bg-green-800 text-white py-3 px-6 rounded-lg mt-4 transition-all duration-300 ease-in-out ${
                 isAddingToCart ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
