@@ -42,10 +42,6 @@ const ProductList = () => {
     console.log('Valid Products:', validProducts)
   }, [isLoading, isSuccess, isError, products, filteredProducts, validProducts])
 
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
-
   if (isError) {
     console.error('Fetch error:', error) // Log the error details for debugging
     return (
