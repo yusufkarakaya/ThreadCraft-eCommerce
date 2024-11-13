@@ -51,6 +51,10 @@ const ProductList = () => {
     refetch,
   ])
 
+  if (isLoading) {
+    return <p>Loading...</p>
+  }
+
   if (isError) {
     console.error('Fetch error:', error) // Log the error details for debugging
     return (

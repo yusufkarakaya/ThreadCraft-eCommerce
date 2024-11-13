@@ -28,6 +28,12 @@ const CartDashboard = () => {
   const [increaseQuantity] = useIncreaseQuantityMutation()
   const [decreaseQuantity] = useDecreaseQuantityMutation()
 
+  useEffect(() => {
+    console.log(cart.products)
+
+    refetch()
+  }, [refetch])
+
   if (!user) {
     return (
       <div className="mt-5">You need to be logged in to view the cart.</div>
@@ -70,6 +76,7 @@ const CartDashboard = () => {
   const handleIncreaseQuantity = async (productId) => {
     try {
       await increaseQuantity(productId).unwrap()
+      await refetch()
     } catch (error) {
       console.error('Failed to increase product quantity:', error)
     }
@@ -78,6 +85,7 @@ const CartDashboard = () => {
   const handleDecreaseQuantity = async (productId) => {
     try {
       await decreaseQuantity(productId).unwrap()
+      await refetch()
     } catch (error) {
       console.error('Failed to decrease product quantity:', error)
     }
@@ -133,11 +141,6 @@ const CartDashboard = () => {
       alert('Failed to initiate checkout. Please try again.')
     }
   }
-
-  useEffect(() => {
-    console.log(cart.products)
-    refetch()
-  }, [refetch, cart.products])
 
   return (
     <div className="pt-8">
