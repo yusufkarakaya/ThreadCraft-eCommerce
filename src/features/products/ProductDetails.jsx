@@ -15,6 +15,15 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1)
   const [addToCart, { isLoading: isAddingToCart }] = useAddToCartMutation()
 
+  const {
+    data: fetchedProduct,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetProductByIdQuery(productId, {
+    skip: !!product,
+  })
+
   const handleAddToCart = async () => {
     if (productToDisplay.stock <= 0) {
       console.error('Product is out of stock')
@@ -28,6 +37,7 @@ const ProductDetails = () => {
 
     try {
       await addToCart(payload).unwrap()
+      await refetch()
       console.log('Product added to cart successfully')
     } catch (error) {
       console.error('Failed to add product to cart:', error)
@@ -36,15 +46,6 @@ const ProductDetails = () => {
       }
     }
   }
-
-  const {
-    data: fetchedProduct,
-    isLoading,
-    isError,
-    refetch,
-  } = useGetProductByIdQuery(productId, {
-    skip: !!product,
-  })
 
   const productToDisplay = product || fetchedProduct
 

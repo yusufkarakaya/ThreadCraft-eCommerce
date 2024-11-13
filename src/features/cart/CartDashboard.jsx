@@ -29,8 +29,6 @@ const CartDashboard = () => {
   const [decreaseQuantity] = useDecreaseQuantityMutation()
 
   useEffect(() => {
-    console.log(cart.products)
-
     refetch()
   }, [refetch])
 
