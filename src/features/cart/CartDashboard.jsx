@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { selectUser, selectIsVerified } from '../auth/authSlice'
 import { loadStripe } from '@stripe/stripe-js'
+import { useEffect } from 'react'
 
 const stripePromise = loadStripe(`${import.meta.env.VITE_STRIPE_PUBLIC_KEY}`)
 
@@ -133,10 +134,10 @@ const CartDashboard = () => {
     }
   }
 
-  // useEffect(() => {
-  //   console.log(cart.products)
-  //   refetch()
-  // }, [refetch, cart.products])
+  useEffect(() => {
+    console.log(cart.products)
+    refetch()
+  }, [refetch, cart.products])
 
   return (
     <div className="pt-8">

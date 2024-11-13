@@ -1,9 +1,14 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
+const baseUrl =
+  process.env.NODE_ENV === 'production'
+    ? 'https://threadcraft-ecommerce.onrender.com/api'
+    : 'http://localhost:3500/api'
+
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://e-commerce-api-200w.onrender.com',
+    baseUrl,
     prepareHeaders: (headers, { getState }) => {
       const token = getState().auth.token
 
