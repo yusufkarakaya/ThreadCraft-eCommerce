@@ -28,8 +28,12 @@ const ProductDetails = () => {
 
     try {
       await addToCart(payload).unwrap()
+      console.log('Product added to cart successfully')
     } catch (error) {
       console.error('Failed to add product to cart:', error)
+      if (error?.status === 500) {
+        console.error('Internal Server Error:', error.data)
+      }
     }
   }
 
@@ -37,6 +41,7 @@ const ProductDetails = () => {
     data: fetchedProduct,
     isLoading,
     isError,
+    refetch,
   } = useGetProductByIdQuery(productId, {
     skip: !!product,
   })
@@ -50,18 +55,28 @@ const ProductDetails = () => {
       <div className="text-center text-red-500 mt-10">Product not found</div>
     )
   }
+  useEffect(() => {
+    console.log(productToDisplay)
+  }, [productToDisplay])
 
   return (
     <div className="w-full pt-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="flex justify-center">
-          <img
-            src={`${productToDisplay.imgUrl}`}
-            alt={productToDisplay.name}
-            className="w-full h-auto object-cover rounded-lg shadow-lg"
-          />
+        <div className="flex justify-center flex-col gap-5 ">
+          {productToDisplay ? (
+            productToDisplay.images.map((image, index) => (
+              <img
+                key={index}
+                src={image}
+                alt={productToDisplay.name}
+                className="w-full h-auto object-cover rounded-lg shadow-lg"
+              />
+            ))
+          ) : (
+            <p>no image found</p>
+          )}
         </div>
-        <div className="flex flex-col justify-center">
+        <div className="flex flex-col">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
             {productToDisplay.name}
           </h1>
@@ -111,17 +126,20 @@ const ProductDetails = () => {
               className="w-20 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
             />
           </div>
-
           {user ? (
-            <button
-              onClick={handleAddToCart}
-              disabled={isAddingToCart || productToDisplay.stock === 0}
-              className={`bg-green-900 hover:bg-green-800 text-white py-3 px-6 rounded-lg mt-4 transition-all duration-300 ease-in-out ${
-                isAddingToCart ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
-            >
-              {isAddingToCart ? 'Adding...' : 'Add to Cart'}
-            </button>
+            user.role === 'admin' ? (
+              <p className="text-center text-blue-500 mt-4">You're admin</p>
+            ) : (
+              <button
+                onClick={handleAddToCart}
+                disabled={isAddingToCart || productToDisplay.stock === 0}
+                className={`bg-green-900 hover:bg-green-800 text-white py-3 px-6 rounded-lg mt-4 transition-all duration-300 ease-in-out ${
+                  isAddingToCart ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+              >
+                {isAddingToCart ? 'Adding...' : 'Add to Cart'}
+              </button>
+            )
           ) : (
             <p className="text-center text-red-500 mt-4">
               Please login to add this item to your cart

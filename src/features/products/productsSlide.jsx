@@ -19,7 +19,6 @@ export const productsApiSlice = apiSlice.injectEndpoints({
           stock: product.stock,
           price: product.price,
           description: product.description,
-          // imgUrl: product.imageUrl,
           images: product.images,
           category: product.category,
         }))
@@ -41,7 +40,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
           name: responseData.name,
           stock: responseData.stock,
           price: responseData.price,
-          imgUrl: responseData.imageUrl,
+          images: responseData.images,
           category: responseData.category,
           description: responseData.description,
         }
@@ -80,7 +79,6 @@ export const productsApiSlice = apiSlice.injectEndpoints({
   }),
 })
 
-// Export hooks for using the endpoints
 export const {
   useGetProductsQuery,
   useGetProductByIdQuery,
@@ -89,7 +87,6 @@ export const {
   useDeleteProductMutation,
 } = productsApiSlice
 
-// Returns the query result object
 export const selectProductResult =
   productsApiSlice.endpoints.getProducts.select()
 
@@ -102,5 +99,5 @@ const selectProductData = createSelector(
 export const {
   selectAll: selectAllProducts,
   selectById: selectProductById,
-  selectIds: selectProductIds, // Corrected typo here
+  selectIds: selectProductIds,
 } = productsAdapter.getSelectors(selectProductData)

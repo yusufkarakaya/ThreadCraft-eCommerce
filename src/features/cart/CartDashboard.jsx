@@ -7,10 +7,8 @@ import {
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { selectUser, selectIsVerified } from '../auth/authSlice'
-import { useEffect } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 
-// Stripe promise'ı component dışında oluştur
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY)
 
 const CartDashboard = () => {
@@ -29,29 +27,20 @@ const CartDashboard = () => {
   const [increaseQuantity] = useIncreaseQuantityMutation()
   const [decreaseQuantity] = useDecreaseQuantityMutation()
 
-  // Kullanıcının oturum açmamış olması durumunda
   if (!user) {
     return (
       <div className="mt-5">You need to be logged in to view the cart.</div>
     )
   }
 
-  // Cart değiştikçe yeniden veri getirme
-  useEffect(() => {
-    refetch()
-  }, [refetch])
-
-  // Sepet boşsa bilgilendirme
   if (cart && cart.products.length === 0) {
     return <div className="mt-5">Your cart is empty</div>
   }
 
-  // Veri yüklenirken bekleme mesajı
   if (isLoading) {
     return <div>Loading...</div>
   }
 
-  // Hata durumunda hata mesajı
   if (isError) {
     return <div className="mt-5">Fetch Error</div>
   }
@@ -144,6 +133,11 @@ const CartDashboard = () => {
     }
   }
 
+  // useEffect(() => {
+  //   console.log(cart.products)
+  //   refetch()
+  // }, [refetch, cart.products])
+
   return (
     <div className="pt-8">
       <h1 className="text-2xl font-bold text-gray-800 mb-2 text-center">
@@ -162,10 +156,10 @@ const CartDashboard = () => {
                   key={productItem?.product?._id || index}
                   className="flex items-center border-b pb-4"
                 >
-                  {productItem?.product?.imageUrl && (
+                  {productItem?.product?.images && (
                     <img
                       className="w-20 h-20 rounded-md mr-4"
-                      src={`${productItem?.product?.imageUrl}`}
+                      src={`${productItem?.product?.images[0]}`}
                       alt={productItem?.product?.name}
                     />
                   )}

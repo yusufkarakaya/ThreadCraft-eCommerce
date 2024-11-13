@@ -32,7 +32,10 @@ const ProductList = () => {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {filteredProducts.map((product) => (
-            <div key={product.id} className="bg-white p-4 border rounded-lg">
+            <div
+              key={product.id}
+              className="bg-white p-4 border rounded-lg hover:scale-95 transition-all duration-300"
+            >
               <Link to={`/product/${product.id}`}>
                 <img
                   src={`${product.images[0]}`}
