@@ -40,7 +40,16 @@ const ProductList = () => {
     console.log('Products:', products)
     console.log('Filtered Products:', filteredProducts)
     console.log('Valid Products:', validProducts)
-  }, [isLoading, isSuccess, isError, products, filteredProducts, validProducts])
+    refetch()
+  }, [
+    isLoading,
+    isSuccess,
+    isError,
+    products,
+    filteredProducts,
+    validProducts,
+    refetch,
+  ])
 
   if (isError) {
     console.error('Fetch error:', error) // Log the error details for debugging
