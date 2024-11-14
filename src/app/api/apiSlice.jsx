@@ -8,7 +8,7 @@ const baseUrl =
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:3500',
+    baseUrl: 'https://e-commerce-api-200w.onrender.com',
     credentials: 'include',
     prepareHeaders: (headers, { getState }) => {
       const token = getState().auth.token
