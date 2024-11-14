@@ -19,7 +19,7 @@ const Navbar = () => {
   const [quantity, setQuantity] = useState(0)
 
   useEffect(() => {
-    if (cart && cart.products && cart.products.length >= 0) {
+    if (cart && cart.products && cart.products.length > 0) {
       const totalQuantity = cart.products.reduce(
         (acc, item) => acc + item.quantity,
         0
@@ -54,8 +54,8 @@ const Navbar = () => {
 
         <ul className="flex space-x-3">
           <li
-            className="text-base text-green-900 cursor-pointer  hover:text-gray-800 hover:underline hover:underline-offset-2"
-            onClick={() => shopAll()}
+            className="text-base text-green-900 cursor-pointer hover:text-gray-800 hover:underline hover:underline-offset-2"
+            onClick={shopAll}
           >
             Shop All
           </li>
@@ -82,57 +82,50 @@ const Navbar = () => {
           </li>
         </ul>
 
-        <div className="flex space-x-4">
-          <span>
-            {user ? (
-              <CiLogout
-                data-tooltip-id="logout-tooltip"
-                data-tooltip-content="Log Out"
-                onClick={handleLogout}
+        <div className="flex space-x-4 items-center">
+          {user ? (
+            <CiLogout
+              data-tooltip-id="logout-tooltip"
+              data-tooltip-content="Log Out"
+              onClick={handleLogout}
+              className="w-10 h-10 cursor-pointer"
+            />
+          ) : (
+            <Link to="/auth/login">
+              <CiLogin
+                data-tooltip-id="login-tooltip"
+                data-tooltip-content="Log In"
                 className="w-10 h-10 cursor-pointer"
-              >
-                Log Out
-              </CiLogout>
-            ) : (
-              <Link to="/auth/login">
-                <CiLogin
-                  data-tooltip-id="logout-tooltip"
-                  data-tooltip-content="Log In"
-                  className="w-10 h-10 cursor-pointer"
-                />
-              </Link>
-            )}
-            <ReactTooltip id="logout-tooltip" />
-          </span>
+              />
+            </Link>
+          )}
+          <ReactTooltip id="logout-tooltip" />
+          <ReactTooltip id="login-tooltip" />
 
           {user && user.role === 'admin' ? (
-            <span>
-              <Link to="/admin">
-                <RiAdminLine
-                  data-tooltip-id="admin-tooltip"
-                  data-tooltip-content="Admin Dashboard"
-                  className="w-10 h-10 cursor-pointer"
-                />
-              </Link>
-              <ReactTooltip id="admin-tooltip" />
-            </span>
+            <Link to="/admin">
+              <RiAdminLine
+                data-tooltip-id="admin-tooltip"
+                data-tooltip-content="Admin Dashboard"
+                className="w-10 h-10 cursor-pointer"
+              />
+            </Link>
           ) : (
-            <span>
-              <Link to="/cart" className="relative">
-                <CiShoppingCart
-                  data-tooltip-id="cart-tooltip"
-                  data-tooltip-content="Shopping Cart"
-                  className="w-10 h-10 cursor-pointer outline-none"
-                />
-                {user && quantity > 0 && (
-                  <span className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 bg-red-500 text-white rounded-full px-2 py-1 text-xs font-bold flex items-center justify-center">
-                    {quantity}
-                  </span>
-                )}
-              </Link>
-              <ReactTooltip id="cart-tooltip" />
-            </span>
+            <Link to="/cart" className="relative">
+              <CiShoppingCart
+                data-tooltip-id="cart-tooltip"
+                data-tooltip-content="Shopping Cart"
+                className="w-10 h-10 cursor-pointer outline-none"
+              />
+              {user && quantity > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2 py-0.5 text-xs font-bold flex items-center justify-center">
+                  {quantity}
+                </span>
+              )}
+            </Link>
           )}
+          <ReactTooltip id="admin-tooltip" />
+          <ReactTooltip id="cart-tooltip" />
         </div>
       </nav>
       <section className="text-sm font-semibold text-main-text text-right">

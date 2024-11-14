@@ -40,16 +40,7 @@ const ProductList = () => {
     console.log('Products:', products)
     console.log('Filtered Products:', filteredProducts)
     console.log('Valid Products:', validProducts)
-    refetch()
-  }, [
-    isLoading,
-    isSuccess,
-    isError,
-    products,
-    filteredProducts,
-    validProducts,
-    refetch,
-  ])
+  }, [isLoading, isSuccess, isError, products, filteredProducts, validProducts])
 
   if (isLoading) {
     return <p>Loading...</p>

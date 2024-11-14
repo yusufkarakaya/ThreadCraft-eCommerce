@@ -37,7 +37,7 @@ const ProductDetails = () => {
 
     try {
       await addToCart(payload).unwrap()
-      await refetch()
+
       console.log('Product added to cart successfully')
     } catch (error) {
       console.error('Failed to add product to cart:', error)
