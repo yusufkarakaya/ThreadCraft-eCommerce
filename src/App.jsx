@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { store, persistor } from './app/store'
 import { PersistGate } from 'redux-persist/integration/react'
+import NotFound from './components/NotFound'
 
 import Layout from './components/Layout'
 import ProductList from './features/products/ProductList'
@@ -32,18 +33,21 @@ function App() {
       <PersistGate loading={null} persistor={persistor}>
         <BrowserRouter>
           <Routes>
+            {/* Layout Rotası */}
             <Route path="/" element={<Layout />}>
               <Route index element={<ProductList />} />
-              <Route path="/product/:productId" element={<ProductDetails />} />
-              <Route path="/cart" element={<CartDashboard />} />
-              <Route path="/checkout/success" element={<Success />} />
-              <Route path="/checkout/cancel" element={<Cancel />} />
+              <Route path="product/:productId" element={<ProductDetails />} />
+              <Route path="cart" element={<CartDashboard />} />
+              <Route path="checkout/success" element={<Success />} />
+              <Route path="checkout/cancel" element={<Cancel />} />
             </Route>
 
+            {/* Authentication Rotaları */}
             <Route path="/auth/login" element={<Login />} />
             <Route path="/auth/register" element={<Register />} />
             <Route path="/auth/verification" element={<VerificationForm />} />
 
+            {/* Admin Rotaları */}
             <Route
               path="/admin"
               element={
@@ -68,6 +72,9 @@ function App() {
                 </AdminRoute>
               }
             />
+
+            {/* Not Found Rotası */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </PersistGate>
