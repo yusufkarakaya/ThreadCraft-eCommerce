@@ -1,18 +1,17 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// Basit Vite Konfigürasyonu (Proxy olmadan)
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 5173, // Geliştirme sunucusunun portunu ayarlayın (varsayılan olarak 3000)
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3500', // Backend port'unuz
+        changeOrigin: true,
+      },
+    },
   },
   build: {
-    outDir: 'dist', // Üretim build çıktısının klasörü
-  },
-  resolve: {
-    alias: {
-      '@': '/src', // Kısayol olarak '@' işareti ile 'src' klasörüne referans
-    },
+    outDir: 'dist',
   },
 })
