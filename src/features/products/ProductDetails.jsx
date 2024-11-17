@@ -56,9 +56,6 @@ const ProductDetails = () => {
       <div className="text-center text-red-500 mt-10">Product not found</div>
     )
   }
-  useEffect(() => {
-    console.log(productToDisplay)
-  }, [productToDisplay])
 
   return (
     <div className="w-full pt-8">

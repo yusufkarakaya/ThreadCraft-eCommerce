@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://e-commerce-api-200w.onrender.com', // Backend port'unuz
+        target: 'https://e-commerce-api-200w.onrender.com', // Backend port
         changeOrigin: true,
       },
     },

@@ -42,12 +42,10 @@ function App() {
               <Route path="checkout/cancel" element={<Cancel />} />
             </Route>
 
-            {/* Authentication Rotaları */}
             <Route path="/auth/login" element={<Login />} />
             <Route path="/auth/register" element={<Register />} />
             <Route path="/auth/verification" element={<VerificationForm />} />
 
-            {/* Admin Rotaları */}
             <Route
               path="/admin"
               element={
@@ -73,7 +71,6 @@ function App() {
               }
             />
 
-            {/* Not Found Rotası */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
