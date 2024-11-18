@@ -1,9 +1,4 @@
-import { createSelector, createEntityAdapter } from '@reduxjs/toolkit'
 import { apiSlice } from '../../app/api/apiSlice'
-
-// const cartAdapter = createEntityAdapter()
-
-// const initialState = cartAdapter.getInitialState()
 
 export const cartApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -69,13 +64,3 @@ export const {
 } = cartApiSlice
 
 export const cartReducer = cartApiSlice.reducer
-
-// export const selectCart = (state) => state.cart
-
-// export const selectCartItems = createSelector(selectCart, (cart) => {
-//   return cartAdapter.getSelectors().selectAll(cart)
-// })
-
-// export const selectCartTotal = createSelector(selectCartItems, (cartItems) => {
-//   return cartItems.reduce((total, item) => total + item.price, 0)
-// })

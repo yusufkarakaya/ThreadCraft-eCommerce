@@ -14,7 +14,7 @@ const Navbar = () => {
   const navigate = useNavigate()
 
   const user = useSelector(selectUser)
-  const { data: cart, isSuccess } = useGetCartQuery()
+  const { data: cart, refetch } = useGetCartQuery()
 
   const [quantity, setQuantity] = useState(0)
 
@@ -25,8 +25,11 @@ const Navbar = () => {
         0
       )
       setQuantity(totalQuantity)
+    } else {
+      setQuantity(0)
     }
-  }, [cart])
+    refetch()
+  }, [cart, refetch])
 
   const handleCategoryClick = (category) => {
     navigate(`/?category=${category}`)

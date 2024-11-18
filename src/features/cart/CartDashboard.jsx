@@ -74,7 +74,6 @@ const CartDashboard = () => {
   const handleIncreaseQuantity = async (productId) => {
     try {
       await increaseQuantity(productId).unwrap()
-      await refetch()
     } catch (error) {
       console.error('Failed to increase product quantity:', error)
     }
@@ -83,7 +82,6 @@ const CartDashboard = () => {
   const handleDecreaseQuantity = async (productId) => {
     try {
       await decreaseQuantity(productId).unwrap()
-      await refetch()
     } catch (error) {
       console.error('Failed to decrease product quantity:', error)
     }

@@ -33,21 +33,21 @@ const ProductList = () => {
   const validProducts = filteredProducts.filter(isValidProduct)
 
   // Debugging logs to check states and data
-  useEffect(() => {
-    console.log('Loading:', isLoading)
-    console.log('Success:', isSuccess)
-    console.log('Error:', isError)
-    console.log('Products:', products)
-    console.log('Filtered Products:', filteredProducts)
-    console.log('Valid Products:', validProducts)
-  }, [isLoading, isSuccess, isError, products, filteredProducts, validProducts])
+  useEffect(() => {}, [
+    isLoading,
+    isSuccess,
+    isError,
+    products,
+    filteredProducts,
+    validProducts,
+  ])
 
   if (isLoading) {
     return <p>Loading...</p>
   }
 
   if (isError) {
-    console.error('Fetch error:', error) // Log the error details for debugging
+    console.error('Fetch error:', error)
     return (
       <div className="text-center text-red-500 mt-10">
         <p>
