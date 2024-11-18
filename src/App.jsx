@@ -33,7 +33,7 @@ function App() {
       <PersistGate loading={null} persistor={persistor}>
         <BrowserRouter>
           <Routes>
-            {/* Layout Rotası */}
+            {/* Layout Route */}
             <Route path="/" element={<Layout />}>
               <Route index element={<ProductList />} />
               <Route path="product/:productId" element={<ProductDetails />} />
