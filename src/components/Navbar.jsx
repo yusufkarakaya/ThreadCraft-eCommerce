@@ -110,7 +110,7 @@ const Navbar = () => {
               <RiAdminLine
                 data-tooltip-id="admin-tooltip"
                 data-tooltip-content="Admin Dashboard"
-                className="w-10 h-10 cursor-pointer"
+                className="w-10 h-10 cursor-pointer outline-none"
               />
             </Link>
           ) : (
