@@ -9,8 +9,7 @@ import {
 } from '../products/productsSlide'
 
 const AdminDashboard = () => {
-  const { isLoading, isSuccess, isError, error, refetch } =
-    useGetProductsQuery()
+  const { isLoading, isSuccess, isError, error } = useGetProductsQuery()
 
   const products = useSelector(selectAllProducts)
 

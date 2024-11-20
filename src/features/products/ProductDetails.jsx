@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { selectProductById, useGetProductByIdQuery } from './productsSlide'
@@ -19,7 +19,6 @@ const ProductDetails = () => {
     data: fetchedProduct,
     isLoading,
     isError,
-    refetch,
   } = useGetProductByIdQuery(productId, {
     skip: !!product,
   })

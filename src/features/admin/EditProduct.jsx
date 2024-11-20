@@ -22,7 +22,7 @@ const EditProduct = () => {
     images: [],
   })
 
-  const [newImages, setNewImages] = useState([]) // Store new images to be uploaded
+  const [newImages, setNewImages] = useState([])
   const [categories, setCategories] = useState([])
 
   useEffect(() => {
@@ -90,7 +90,6 @@ const EditProduct = () => {
     formData.append('stock', Number(formValues.stock))
     formData.append('description', formValues.description)
 
-    // Append new images to the form data
     newImages.forEach((image) => {
       formData.append('images', image)
     })

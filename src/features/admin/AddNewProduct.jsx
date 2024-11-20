@@ -11,8 +11,7 @@ const AddNewProduct = () => {
   const [addNewProduct, { isLoading, isSuccess, isError, error }] =
     useAddNewProductMutation()
 
-  const { data: products = [], isLoading: isProductLoading } =
-    useGetProductsQuery()
+  const { data: products = [] } = useGetProductsQuery()
 
   const [categories, setCategories] = useState([])
 

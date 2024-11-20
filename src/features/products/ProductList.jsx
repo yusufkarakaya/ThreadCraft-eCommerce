@@ -32,16 +32,6 @@ const ProductList = () => {
   // Filter out invalid products
   const validProducts = filteredProducts.filter(isValidProduct)
 
-  // Debugging logs to check states and data
-  useEffect(() => {}, [
-    isLoading,
-    isSuccess,
-    isError,
-    products,
-    filteredProducts,
-    validProducts,
-  ])
-
   if (isLoading) {
     return <p>Loading...</p>
   }
