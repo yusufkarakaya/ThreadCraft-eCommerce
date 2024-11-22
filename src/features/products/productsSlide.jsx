@@ -76,6 +76,17 @@ export const productsApiSlice = apiSlice.injectEndpoints({
         { type: 'Product', id: 'LIST' },
       ],
     }),
+    deleteProductImage: builder.mutation({
+      query: ({ productId, image }) => ({
+        url: `/api/products/${productId}/images`,
+        method: 'DELETE',
+        body: { image },
+      }),
+      invalidatesTags: (result, error, { productId }) => [
+        { type: 'Product', id: productId },
+        { type: 'Product', id: 'LIST' },
+      ],
+    }),
   }),
 })
 
@@ -85,6 +96,7 @@ export const {
   useAddNewProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
+  useDeleteProductImageMutation,
 } = productsApiSlice
 
 export const selectProductResult =

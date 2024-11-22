@@ -3,6 +3,7 @@ import {
   useGetProductByIdQuery,
   useUpdateProductMutation,
   useGetProductsQuery,
+  useDeleteProductImageMutation,
 } from '../products/productsSlide'
 import { useParams, useNavigate } from 'react-router-dom'
 
@@ -12,6 +13,7 @@ const EditProduct = () => {
   const { data: product, isLoading } = useGetProductByIdQuery(productId)
   const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation()
   const { data: products = [] } = useGetProductsQuery()
+  const [deleteProductImage] = useDeleteProductImageMutation()
 
   const [formValues, setFormValues] = useState({
     name: '',
@@ -73,11 +75,17 @@ const EditProduct = () => {
     setNewImages((prev) => [...prev, ...files])
   }
 
-  const handleDeleteImage = (imageUrl) => {
-    setFormValues((prev) => ({
-      ...prev,
-      images: prev.images.filter((img) => img !== imageUrl),
-    }))
+  const handleDeleteImage = async (imageUrl) => {
+    try {
+      await deleteProductImage({ productId, image: imageUrl }).unwrap()
+      console.log('Image deleted successfully!')
+      setFormValues((prev) => ({
+        ...prev,
+        images: prev.images.filter((img) => img !== imageUrl),
+      }))
+    } catch (error) {
+      console.error('Failed to delete image:', error)
+    }
   }
 
   const handleUpdateProduct = async (e) => {

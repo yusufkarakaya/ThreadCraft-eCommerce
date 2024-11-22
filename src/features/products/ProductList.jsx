@@ -2,7 +2,6 @@ import { useGetProductsQuery } from './productsSlide'
 import { useSelector } from 'react-redux'
 import { selectAllProducts } from './productsSlide'
 import { Link, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
 
 const ProductList = () => {
   const { isLoading, isSuccess, isError, error, refetch } =
