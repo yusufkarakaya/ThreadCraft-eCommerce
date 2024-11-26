@@ -12,12 +12,10 @@ const ProductList = () => {
   const queryParams = new URLSearchParams(location.search)
   const selectedCategory = queryParams.get('category')
 
-  // Filter products by category and validate each product
   const filteredProducts = selectedCategory
     ? products.filter((product) => product.category?.name === selectedCategory)
     : products
 
-  // Validation function to check if required fields exist
   const isValidProduct = (product) => {
     return (
       product &&
@@ -27,8 +25,6 @@ const ProductList = () => {
       product.images.length > 0
     )
   }
-
-  // Filter out invalid products
   const validProducts = filteredProducts.filter(isValidProduct)
 
   if (isLoading) {

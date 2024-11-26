@@ -26,7 +26,6 @@ const Success = () => {
     }
   }, [sessionId])
 
-  // Ödeme başarılı olduğunda sepeti temizle
   useEffect(() => {
     if (session) {
       const clearUserCart = async () => {

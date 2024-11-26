@@ -102,7 +102,6 @@ const EditProduct = () => {
       formData.append('images', image)
     })
 
-    // Append existing images to the form data
     formData.append('existingImages', JSON.stringify(formValues.images))
 
     try {
