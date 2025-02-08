@@ -2,18 +2,19 @@ import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { selectProductById, useGetProductByIdQuery } from './productsSlide'
-import { useAddToCartMutation } from '../cart/cartSlice'
-import { selectUser } from '../auth/authSlice'
+import { useAddToCartMutation } from '../cart/cartApiSlice'
+import { selectCurrentUser } from '../auth/authSlice'
 
 const ProductDetails = () => {
   const { productId } = useParams()
 
-  const user = useSelector(selectUser)
+  const user = useSelector(selectCurrentUser)
 
   const product = useSelector((state) => selectProductById(state, productId))
 
   const [quantity, setQuantity] = useState(1)
   const [addToCart, { isLoading: isAddingToCart }] = useAddToCartMutation()
+  const [addSuccess, setAddSuccess] = useState(false)
 
   const {
     data: fetchedProduct,
@@ -30,25 +31,38 @@ const ProductDetails = () => {
     }
 
     const payload = {
-      product: productToDisplay.id,
-      quantity,
+      productId: productId,
+      quantity: Number(quantity),
+      isGuest: !user
     }
 
     try {
-      await addToCart(payload).unwrap()
-
-      console.log('Product added to cart successfully')
+      console.log('Adding to cart with payload:', payload)
+      const result = await addToCart(payload).unwrap()
+      console.log('Add to cart response:', result)
+      setAddSuccess(true)
+      setTimeout(() => setAddSuccess(false), 2000)
     } catch (error) {
       console.error('Failed to add product to cart:', error)
-      if (error?.status === 500) {
-        console.error('Internal Server Error:', error.data)
+      if (error?.status === 404) {
+        alert('Cart service is not available. Please try again later.')
+      } else if (error?.data?.message) {
+        alert(error.data.message)
+      } else {
+        alert('Failed to add product to cart. Please try again.')
       }
     }
   }
 
   const productToDisplay = product || fetchedProduct
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-900"></div>
+      </div>
+    )
+  }
 
   if (isError || !productToDisplay) {
     return (
@@ -123,24 +137,25 @@ const ProductDetails = () => {
               className="w-20 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
             />
           </div>
-          {user ? (
-            user.role === 'admin' ? (
-              <p className="text-center text-blue-500 mt-4">You're admin</p>
-            ) : (
+          {user?.role === 'admin' ? (
+            <p className="text-center text-blue-500 mt-4">You're admin</p>
+          ) : (
+            <div className="relative">
               <button
                 onClick={handleAddToCart}
                 disabled={isAddingToCart || productToDisplay.stock === 0}
-                className={`bg-green-900 hover:bg-green-800 text-white py-3 px-6 rounded-lg mt-4 transition-all duration-300 ease-in-out ${
+                className={`bg-green-900 hover:bg-green-800 text-white py-3 px-6 rounded-lg mt-4 transition-all duration-300 ease-in-out w-full ${
                   isAddingToCart ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
               >
                 {isAddingToCart ? 'Adding...' : 'Add to Cart'}
               </button>
-            )
-          ) : (
-            <p className="text-center text-red-500 mt-4">
-              Please login to add this item to your cart
-            </p>
+              {addSuccess && (
+                <div className="absolute top-0 left-0 right-0 -mt-8 text-center text-green-600">
+                  Added to cart successfully!
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>

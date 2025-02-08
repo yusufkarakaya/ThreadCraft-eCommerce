@@ -3,42 +3,56 @@ import { Tooltip as ReactTooltip } from 'react-tooltip'
 import { CiLogin, CiLogout, CiShoppingCart } from 'react-icons/ci'
 import { RiAdminLine } from 'react-icons/ri'
 import { Link, useNavigate } from 'react-router-dom'
-import { selectUser } from '../features/auth/authSlice'
+import { selectCurrentUser, logOut } from '../features/auth/authSlice'
 import { useSelector, useDispatch } from 'react-redux'
-import { logOut } from '../features/auth/authSlice'
 import { persistor } from '../app/store'
-import { useGetCartQuery } from '../features/cart/cartSlice'
+import {
+  useGetCartQuery,
+  useClearCartMutation,
+} from '../features/cart/cartApiSlice'
 
 const Navbar = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const user = useSelector(selectUser)
-  const { data: cart, refetch } = useGetCartQuery()
+  const user = useSelector(selectCurrentUser)
+  const { data: cart } = useGetCartQuery()
+  const [clearCart] = useClearCartMutation()
 
   const [quantity, setQuantity] = useState(0)
 
   useEffect(() => {
-    if (cart && cart.products && cart.products.length > 0) {
+    if (user && cart?.products) {
       const totalQuantity = cart.products.reduce(
-        (acc, item) => acc + item.quantity,
+        (acc, item) => acc + (item.quantity || 0),
         0
       )
       setQuantity(totalQuantity)
     } else {
       setQuantity(0)
     }
-    refetch()
-  }, [cart, refetch])
+  }, [cart, user])
 
   const handleCategoryClick = (category) => {
     navigate(`/?category=${category}`)
   }
 
-  const handleLogout = () => {
-    dispatch(logOut())
-    persistor.purge()
-    navigate('/')
+  const handleLogout = async () => {
+    try {
+      if (user) {
+        await clearCart().unwrap()
+      }
+      dispatch(logOut())
+      persistor.purge()
+      setQuantity(0) // Reset quantity on logout
+      navigate('/')
+    } catch (error) {
+      console.error('Failed to clear cart during logout:', error)
+      dispatch(logOut())
+      persistor.purge()
+      setQuantity(0) // Reset quantity on logout
+      navigate('/')
+    }
   }
 
   const shopAll = () => {
@@ -105,7 +119,7 @@ const Navbar = () => {
           <ReactTooltip id="logout-tooltip" />
           <ReactTooltip id="login-tooltip" />
 
-          {user && user.role === 'admin' ? (
+          {user?.role === 'admin' ? (
             <Link to="/admin">
               <RiAdminLine
                 data-tooltip-id="admin-tooltip"
@@ -120,7 +134,7 @@ const Navbar = () => {
                 data-tooltip-content="Shopping Cart"
                 className="w-10 h-10 cursor-pointer outline-none"
               />
-              {user && quantity > 0 && (
+              {quantity > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2 py-0.5 text-xs font-bold flex items-center justify-center">
                   {quantity}
                 </span>
@@ -132,7 +146,7 @@ const Navbar = () => {
         </div>
       </nav>
       <section className="text-sm font-semibold text-main-text text-right">
-        {user ? `Welcome, ${user.username}` : 'Welcome, Guest'}
+        {user ? `Welcome, ${user?.username}` : 'Welcome, Guest'}
       </section>
     </header>
   )

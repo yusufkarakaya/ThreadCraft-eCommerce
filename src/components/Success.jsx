@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { useClearCartMutation } from '../features/cart/cartSlice'
+import { useClearCartMutation } from '../features/cart/cartApiSlice'
 
 const Success = () => {
   const [session, setSession] = useState(null)

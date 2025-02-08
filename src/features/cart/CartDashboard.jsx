@@ -1,244 +1,210 @@
+import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { selectCurrentUser, selectIsAuthenticated } from '../auth/authSlice'
+import { selectCartStatus, selectCartError, selectGuestId } from './cartSlice'
 import {
   useGetCartQuery,
   useRemoveFromCartMutation,
   useIncreaseQuantityMutation,
   useDecreaseQuantityMutation,
-} from './cartSlice'
-import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { selectUser, selectIsVerified } from '../auth/authSlice'
-import { loadStripe } from '@stripe/stripe-js'
-import { useEffect } from 'react'
-
-const stripePromise = loadStripe(`${import.meta.env.VITE_STRIPE_PUBLIC_KEY}`)
+} from './cartApiSlice'
 
 const CartDashboard = () => {
-  const isVerified = useSelector(selectIsVerified)
+  const dispatch = useDispatch()
+  const user = useSelector(selectCurrentUser)
+  const isAuthenticated = useSelector(selectIsAuthenticated)
+  const cartStatus = useSelector(selectCartStatus)
+  const cartError = useSelector(selectCartError)
+  const guestId = useSelector(selectGuestId)
 
-  const user = useSelector(selectUser)
-  const {
-    data: cart,
-    isLoading,
-    isSuccess,
-    isError,
-    refetch,
-  } = useGetCartQuery()
+  const { data: cart, isLoading, refetch } = useGetCartQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+    pollingInterval: 0,
+    refetchOnFocus: false,
+    refetchOnReconnect: false
+  })
+
+  useEffect(() => {
+    console.log('Current User:', user)
+    console.log('Is Authenticated:', isAuthenticated)
+    console.log('Cart Data:', cart)
+    console.log('Guest ID:', guestId)
+    console.log('Cart Status:', cartStatus)
+  }, [user, isAuthenticated, cart, guestId, cartStatus])
 
   const [removeFromCart] = useRemoveFromCartMutation()
   const [increaseQuantity] = useIncreaseQuantityMutation()
   const [decreaseQuantity] = useDecreaseQuantityMutation()
 
   useEffect(() => {
-    refetch()
-  }, [refetch])
+    // Fetch cart data when authentication state changes
+    if (isAuthenticated || (!isAuthenticated && guestId)) {
+      refetch()
+    }
+  }, [isAuthenticated, guestId, refetch])
 
-  if (!user) {
-    return (
-      <div className="mt-5">You need to be logged in to view the cart.</div>
-    )
+  const calculateSubtotal = () => {
+    const products = cart?.products || []
+    if (!products.length) return 0
+    return products.reduce((total, item) => {
+      return total + (item.product.price * item.quantity)
+    }, 0)
   }
 
-  if (cart && cart.products.length === 0) {
-    return <div className="mt-5">Your cart is empty</div>
+  const calculateTax = (subtotal) => {
+    return subtotal * 0.08 // 8% tax
   }
 
-  if (isLoading) {
-    return <div>Loading...</div>
+  const calculateTotal = (subtotal, tax) => {
+    return subtotal + tax
   }
 
-  if (isError) {
-    return <div className="mt-5">Fetch Error</div>
-  }
-
-  if (!cart || !cart.products || cart.products.length === 0) {
-    return <div className="mt-4">Your cart is empty.</div>
-  }
-
-  const subtotal = cart.products.reduce((total, productItem) => {
-    return (
-      total + (productItem?.product?.price || 0) * (productItem?.quantity || 0)
-    )
-  }, 0)
-
-  const estimatedShipping = subtotal > 0 ? 0 : 0
-  const estimatedTotal = subtotal + estimatedShipping
-
-  const handleRemoveProduct = async (productId) => {
+  const handleRemove = async (productId) => {
     try {
       await removeFromCart(productId).unwrap()
-    } catch (error) {
-      console.error('Failed to remove product:', error)
+    } catch (err) {
+      console.error('Failed to remove product:', err)
     }
   }
 
-  const handleIncreaseQuantity = async (productId) => {
+  const handleIncrease = async (productId) => {
     try {
       await increaseQuantity(productId).unwrap()
-    } catch (error) {
-      console.error('Failed to increase product quantity:', error)
+    } catch (err) {
+      console.error('Failed to increase quantity:', err)
     }
   }
 
-  const handleDecreaseQuantity = async (productId) => {
+  const handleDecrease = async (productId) => {
     try {
       await decreaseQuantity(productId).unwrap()
-    } catch (error) {
-      console.error('Failed to decrease product quantity:', error)
+    } catch (err) {
+      console.error('Failed to decrease quantity:', err)
     }
   }
 
-  const handleCheckout = async () => {
-    try {
-      const stripe = await stripePromise
-      if (!stripe) {
-        throw new Error('Stripe failed to load')
-      }
-
-      // Format the line items correctly
-      const lineItems = cart.products.map((productItem) => ({
-        name: productItem.product.name,
-        price: productItem.product.price,
-        quantity: productItem.quantity,
-        image: productItem.product.imageUrl,
-      }))
-
-      const response = await fetch('/api/checkout/create-checkout-session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include', // Include cookies if you're using session-based auth
-        body: JSON.stringify({ items: lineItems }),
-      })
-
-      if (!response.ok) {
-        const errorData = await response.text() // Use text() instead of json() first
-        console.error('Response status:', response.status)
-        console.error('Response text:', errorData)
-
-        try {
-          const jsonError = JSON.parse(errorData)
-          throw new Error(
-            jsonError.error || 'Failed to create checkout session'
-          )
-        } catch (e) {
-          throw new Error('Failed to create checkout session')
-        }
-      }
-
-      const session = await response.json()
-      if (session.url) {
-        window.location.href = session.url
-      } else {
-        throw new Error('No checkout URL received')
-      }
-    } catch (error) {
-      console.error('Checkout error:', error)
-      alert('Failed to initiate checkout. Please try again.')
-    }
+  if (isLoading || cartStatus === 'loading') {
+    return (
+      <div className="flex justify-center items-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+      </div>
+    )
   }
+
+  if (cartError) {
+    return (
+      <div className="text-center py-12">
+        <h2 className="text-2xl font-semibold mb-4 text-red-600">Error loading cart</h2>
+        <p className="text-gray-600 mb-8">{cartError}</p>
+        <button
+          onClick={() => refetch()}
+          className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors"
+        >
+          Try Again
+        </button>
+      </div>
+    )
+  }
+
+  const cartProducts = cart?.products || []
+  const subtotal = calculateSubtotal()
+  const tax = calculateTax(subtotal)
+  const total = calculateTotal(subtotal, tax)
 
   return (
-    <div className="pt-8">
-      <h1 className="text-2xl font-bold text-gray-800 mb-2 text-center">
-        YOUR BAG
-      </h1>
-      <hr />
-      <div className="flex flex-col md:flex-row md:justify-between">
-        <div className="md:w-2/3">
-          <h2 className="text-2xl font-semibold pt-2 mb-4">
-            {user.username}'s Cart
-          </h2>
-          {isSuccess && cart.products.length > 0 ? (
-            <ul className="space-y-4">
-              {cart.products.map((productItem, index) => (
-                <li
-                  key={productItem?.product?._id || index}
-                  className="flex items-center border-b pb-4"
-                >
-                  {productItem?.product?.images && (
-                    <img
-                      className="w-20 h-20 rounded-md mr-4"
-                      src={`${productItem?.product?.images[0]}`}
-                      alt={productItem?.product?.name}
-                    />
-                  )}
-                  <div className="flex-grow">
-                    <p className="text-lg font-semibold">
-                      {productItem?.product?.name}
-                    </p>
-                    <p className="text-gray-600">
-                      ${productItem?.product?.price}
-                    </p>
-                    <div className="mt-1">
-                      Quantity: {productItem?.quantity}
-                    </div>
-                    <div className="mt-1 flex gap-2">
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
+
+      {cartProducts.length > 0 ? (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Cart Items */}
+          <div className="lg:col-span-2">
+            {cartProducts.map((item) => (
+              <div key={item.product._id} 
+                   className="flex flex-col md:flex-row items-center gap-4 p-4 mb-4 bg-white rounded-lg shadow">
+                <img
+                  src={item.product.images[0]}
+                  alt={item.product.name}
+                  className="w-24 h-24 object-cover rounded"
+                />
+                <div className="flex-1 space-y-2">
+                  <h2 className="text-xl font-semibold">{item.product.name}</h2>
+                  <p className="text-gray-600">${item.product.price.toFixed(2)}</p>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center border rounded">
                       <button
-                        onClick={() =>
-                          handleIncreaseQuantity(productItem?.product?._id)
-                        }
-                        className="py-1 px-5 border bg-transparent border-solid font-semibold rounded-md shadow-sm border-main-text hover:bg-main-text hover:text-white transition-all"
-                      >
-                        +
-                      </button>
-                      <button
-                        onClick={() =>
-                          handleDecreaseQuantity(productItem?.product?._id)
-                        }
-                        className="py-1 px-5 border bg-transparent border-solid font-semibold rounded-md shadow-sm border-main-text hover:bg-main-text hover:text-white transition-all"
+                        onClick={() => handleDecrease(item.product._id)}
+                        className="px-3 py-1 hover:bg-gray-100"
                       >
                         -
                       </button>
+                      <span className="px-4 py-1 border-x">{item.quantity}</span>
+                      <button
+                        onClick={() => handleIncrease(item.product._id)}
+                        className="px-3 py-1 hover:bg-gray-100"
+                      >
+                        +
+                      </button>
                     </div>
+                    <button
+                      onClick={() => handleRemove(item.product._id)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      Remove
+                    </button>
                   </div>
-                  <button
-                    className="text-red-500 bg-transparent border border-solid border-red-500 hover:bg-red-500 hover:text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                    onClick={() =>
-                      handleRemoveProduct(productItem?.product?._id)
-                    }
-                  >
-                    Remove
-                  </button>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div>Your cart is empty</div>
-          )}
-        </div>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold">
+                    ${(item.product.price * item.quantity).toFixed(2)}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
 
-        <div className="md:w-1/3 mt-8 md:mt-0 md:ml-8 bg-gray-100 p-6 rounded-lg shadow-lg">
-          <h2 className="text-xl font-bold mb-4">ORDER SUMMARY</h2>
-          <div className="flex justify-between mb-2">
-            <span>Subtotal</span>
-            <span>${subtotal.toFixed(2)}</span>
+          {/* Order Summary */}
+          <div className="lg:col-span-1">
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h2 className="text-xl font-bold mb-4">Order Summary</h2>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span>Subtotal</span>
+                  <span>${subtotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Tax (8%)</span>
+                  <span>${tax.toFixed(2)}</span>
+                </div>
+                <div className="border-t pt-3">
+                  <div className="flex justify-between font-bold">
+                    <span>Total</span>
+                    <span>${total.toFixed(2)}</span>
+                  </div>
+                </div>
+                <Link
+                  to="/checkout"
+                  className="block w-full text-center bg-green-600 text-white py-3 rounded-lg mt-6 hover:bg-green-700 transition-colors"
+                >
+                  Proceed to Checkout
+                </Link>
+              </div>
+            </div>
           </div>
-          <div className="flex justify-between mb-2">
-            <span>Estimated Shipping</span>
-            <span>${estimatedShipping.toFixed(2)}</span>
-          </div>
-          <hr className="my-4" />
-          <div className="flex justify-between font-bold text-lg">
-            <span>Estimated Total</span>
-            <span>${estimatedTotal.toFixed(2)}</span>
-          </div>
-          {isVerified ? (
-            <button
-              onClick={handleCheckout}
-              className="bg-black text-white w-full py-3 mt-6 rounded-lg hover:bg-gray-800 transition-all"
-            >
-              CHECKOUT NOW
-            </button>
-          ) : (
-            <Link to="/auth/verification">
-              <button className="bg-red-900 text-white w-full py-3 mt-6 rounded-lg hover:bg-gray-800 transition-all">
-                Please verify your Email
-              </button>
-            </Link>
-          )}
         </div>
-      </div>
+      ) : (
+        <div className="text-center py-12">
+          <h2 className="text-2xl font-semibold mb-4">Your cart is empty</h2>
+          <p className="text-gray-600 mb-8">Add some products to your cart to continue shopping</p>
+          <Link
+            to="/"
+            className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors"
+          >
+            Continue Shopping
+          </Link>
+        </div>
+      )}
     </div>
   )
 }
